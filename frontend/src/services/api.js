@@ -3,7 +3,7 @@ import axios from 'axios';
 // Configure axios base URL and credentials
 // Using relative URL so Vite proxy can handle it
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://kodbank-z09m.onrender.com/api',
   withCredentials: true, // Important: allows cookies to be sent with requests
   headers: {
     'Content-Type': 'application/json'
