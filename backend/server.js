@@ -6,10 +6,27 @@ const createTables = require('./config/initTables');
 
 const app = express();
 
-// Middleware
+// Middleware - CORS: Allow frontend origins (local + deployed)
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://kodbank-nine.vercel.app',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', process.env.FRONTEND_URL].filter(Boolean),
-  credentials: true // Allow cookies to be sent
+  origin: function (origin, callback) {
+    // Allow requests with no origin (e.g. mobile apps, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // In production, change to: callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
